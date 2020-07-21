@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable{
 
@@ -31,13 +32,15 @@ public class LoginController implements Initializable{
 		
 		String password = textFieldPassword.getText();
 		
-		if(password.equals("1234")) {
+		if(user != null && password.equals("1234")) {
 			
 		
 		
 			Main mvc = new Main();
 			
-			mvc.loadMainScene(Main.getMainStage());				
+			Stage stage = (Stage) Main.getMainScene().getWindow();
+			
+			mvc.loadMainScene(stage);				
 		}
 		else {
 			Alerts.showAlert("Error Authentication", null, "Login and password does not match!", AlertType.ERROR);

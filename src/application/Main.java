@@ -20,7 +20,7 @@ public class Main extends Application {
 		
 		mainStage = primaryStage;
 
-		//1oadLogin(mainStage);
+		//loadLogin(mainStage);
 		loadMainScene(primaryStage);
 
 	}
@@ -73,11 +73,6 @@ public class Main extends Application {
 
 	}
 	
-	public static Stage getMainStage() {
-		
-		return mainStage;
-	}
-
 
 	public static void main(String[] args) {
 		launch(args);
