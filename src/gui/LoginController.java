@@ -3,10 +3,13 @@ package gui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import application.Main;
+import gui.util.Alerts;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 
 public class LoginController implements Initializable{
 
@@ -28,11 +31,16 @@ public class LoginController implements Initializable{
 		
 		String password = textFieldPassword.getText();
 		
-		System.out.println(user + " - " + password);
+		if(password.equals("1234")) {
+			
 		
-		if (password.contentEquals("123")){
-							
-			System.out.println("Login ok");
+		
+			Main mvc = new Main();
+			
+			mvc.loadMainScene(Main.getMainStage());				
+		}
+		else {
+			Alerts.showAlert("Error Authentication", null, "Login and password does not match!", AlertType.ERROR);
 		}
 
 	}
