@@ -4,9 +4,11 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 //new ws
@@ -20,8 +22,8 @@ public class Main extends Application {
 		
 		mainStage = primaryStage;
 
-		loadLogin(mainStage);
-		//loadMainScene(primaryStage);
+		//loadLogin(mainStage);
+		loadMainScene(primaryStage);
 
 	}
 
@@ -41,10 +43,15 @@ public class Main extends Application {
 			// configura ScrollPane para seajustar ao tamanho de tela
 			scrollPlane.setFitToHeight(true);
 			scrollPlane.setFitToWidth(true);			
-			mainScene = new Scene(scrollPlane);
+			mainScene = new Scene(scrollPlane,1200,600);
 			primaryStage.setScene(mainScene);
 			primaryStage.setTitle("Sample JavaFX application");
 			primaryStage.show();
+			
+			//Centraliza window com monitor
+			Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+	        primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+	        primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
 
 
 		} catch (IOException e) {
