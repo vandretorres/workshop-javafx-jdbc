@@ -20,8 +20,8 @@ public class Main extends Application {
 		
 		mainStage = primaryStage;
 
-		//loadLogin(mainStage);
-		loadMainScene(primaryStage);
+		loadLogin(mainStage);
+		//loadMainScene(primaryStage);
 
 	}
 
