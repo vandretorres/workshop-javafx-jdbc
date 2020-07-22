@@ -15,13 +15,9 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
 	private static Scene mainScene;
-	private static Stage mainStage;
-
 	@Override
 	public void start(Stage primaryStage) {
 		
-		mainStage = primaryStage;
-
 		//loadLogin(mainStage);
 		loadMainScene(primaryStage);
 
