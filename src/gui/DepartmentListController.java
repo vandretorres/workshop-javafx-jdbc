@@ -53,7 +53,11 @@ public class DepartmentListController implements Initializable {
 		// Retorna stage do evento  
 		Stage parentStage = Utils.currentStage(event);
 		
-		createDialogForm("/gui/DepartmentForm.fxml",parentStage );	}
+		//cria objeto Department para injetar na classe DepartmentForm
+		Department obj = new Department();		
+		createDialogForm(obj, "/gui/DepartmentForm.fxml",parentStage );	
+		
+	}
 
 
 	// metodo usado para desacoplar chamada do objeto DepartmentSErvice com o atributo sevice.
@@ -119,7 +123,7 @@ public class DepartmentListController implements Initializable {
     //Parametro absolute Name informa qual FXML será aberto
     //Parametro parentStage retorna o Stage da tela principal para que o dialog seja aberto por cima.
      
-    private void createDialogForm(String absoluteName, Stage parentStage) {
+    private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
     	
     	try {
     		
@@ -128,6 +132,14 @@ public class DepartmentListController implements Initializable {
 			// Carrega view do tipo Pane ( superclasse da AnchorPane)
     		Pane pane = loader.load();
 			
+    		//recuperar o controlador do form ( DepartmentFormController )
+    		DepartmentFormController controller  = loader.getController();
+    		//Injeta objeto Department no formulário
+    		controller.setDepartment(obj);
+    		//atualiza os campos os valores do objeto
+    		controller.updateFormData();
+    		
+    		
     		//instancia novo Stage para carregar a nova View			
 			Stage dialogStage = new Stage();
 			
