@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -28,7 +29,7 @@ import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.DepartmentService;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable , DataChangeListener {
 
 
 
@@ -140,6 +141,10 @@ public class DepartmentListController implements Initializable {
     		//Injeta objeto DeparmentSErvice no método setDeparmentService que será utilizado para persistir os dados
     		controller.setDepartmentService(new DepartmentService());
     		
+    		//classe está se inscrevendo para receber o evento da classe DeparmentFormController
+    		// toda vez o evento for acionado o metodo onDataChange será executado
+    		controller.subscribeDataChangeListener(this);
+    		
     		//atualiza os campos os valores do objeto
     		controller.updateFormData();
     		
@@ -174,5 +179,13 @@ public class DepartmentListController implements Initializable {
 		}
     	
     }
+
+	@Override
+	public void onDataChange() {
+		//toda vez que o evento for acionado ( listener DataChangeListener )
+		// o metodo onDataChange será executado atualizando a tabela
+		updateTableView();
+		
+	}
 	
 }
