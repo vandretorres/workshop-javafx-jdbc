@@ -3,7 +3,9 @@ package gui;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import db.DbException;
 import gui.listeners.DataChangeListener;
@@ -18,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.entities.Department;
+import model.exceptions.ValidationException;
 import model.services.DepartmentService;
 
 
@@ -65,6 +68,9 @@ public class DepartmentFormController implements Initializable {
 			
 		}catch (DbException e) {
 			Alerts.showAlert("Error Saving Objecto", null, e.getMessage(), AlertType.ERROR);
+			
+		}catch (ValidationException e) {
+			setErrorMessages(e.getErrors());
 		}
 
 
@@ -129,16 +135,40 @@ public class DepartmentFormController implements Initializable {
 		this.service = service;
 	}
 
+	
+	
 	// Cria um objeto Deparment com os dados informados pelo usuário
 	private Department getFormData() {
 
+		
+		ValidationException exception = new ValidationException("Validation error");		
+		
 		Department obj = new Department();
-
-		obj.setId(Utils.tryParsetoInt(txtId.getText()));
+		obj.setId(Utils.tryParsetoInt(txtId.getText()));			
+		
+		
+		/*
+		 * 
+		 * 
+		 * 
+		 * COLOCAR MENSAGEM SOBRE EXCEPTION
+		 * 
+		 * 
+		 * 
+		 * 
+		 * 
+		 */
+		if ( txtName.getText() == null || txtName.getText().trim().equals("")) {
+			exception.addError("name", "Field can't be empty");
+		}
 		obj.setName(txtName.getText());
-
-		return obj;		
+		
+		if ( exception.getErrors().size() > 0) {
+			throw exception;
+		}		
+		return obj;	
 	}
+	
 	
 	// Este método irá inscrever os listeners na lista
 	//Qualquer classe que queira sre notificado da altreação da tabela Department deverá impelmentar a interface
@@ -146,6 +176,26 @@ public class DepartmentFormController implements Initializable {
 	public void subscribeDataChangeListener(DataChangeListener listener) {
 		
 		dataChangeListeners.add(listener);
+		
+	}
+	
+	
+	/*
+	 * 
+	 * 
+	 * INSERIR MENSGEM SOBRE SET ERRORS
+	 * 
+	 * 
+	 */
+	private void setErrorMessages(Map<String , String> errors) {
+		
+		Set<String> fields = errors.keySet();
+		
+		if(fields.contains("name")){
+			
+			labelErrorName.setText(errors.get("name"));
+		}
+		
 		
 	}
 
