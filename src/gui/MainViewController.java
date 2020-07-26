@@ -17,6 +17,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import model.services.DepartmentService;
+import model.services.SellerService;
 
 public class MainViewController implements Initializable{
 
@@ -31,7 +32,15 @@ public class MainViewController implements Initializable{
 	@FXML
 	public void onMenuItemSellerAction() {
 
-		System.out.println("onMenuItemSellerAction");
+		// Método LoadView é responsável por invocar a tela passada por parametro
+				// foi criado método injetado com expressão lambda para passar além do parametro uma função que será executada 
+				// de modo genérico na funçao loadViewData.
+				// Desta forma a lista de departamentos será populada após a abertura da tela.
+				loadView("/gui/SellerList.fxml",(SellerListController controller) -> {
+					
+					controller.setSellerService(new SellerService());
+					controller.updateTableView();
+				});
 
 	}
 
