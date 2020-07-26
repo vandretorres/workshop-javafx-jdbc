@@ -9,6 +9,7 @@ import application.Main;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -44,6 +46,9 @@ public class DepartmentListController implements Initializable , DataChangeListe
 	@FXML
 	private TableColumn<Department, String> tableColumnName;
 
+	@FXML 
+	TableColumn<Department, Department> tableColumnEDIT; 
+
 	@FXML
 	private Button btNew;
 
@@ -53,11 +58,11 @@ public class DepartmentListController implements Initializable , DataChangeListe
 	public void onBtNewAction(ActionEvent event) {
 		// Retorna stage do evento  
 		Stage parentStage = Utils.currentStage(event);
-		
+
 		//cria objeto Department para injetar na classe DepartmentForm
 		Department obj = new Department();		
 		createDialogForm(obj, "/gui/DepartmentForm.fxml",parentStage );	
-		
+
 	}
 
 
@@ -95,97 +100,120 @@ public class DepartmentListController implements Initializable , DataChangeListe
 		List<Department> list = service.findAll();
 		obsList = FXCollections.observableArrayList(list);
 		tableViewDepartment.setItems(obsList);
+		
+		initEditButtons();
 	}
 
 
-	
+
 	//Evento para capturar doubleClick das linhas da tabela
 	// ideia é permitir atualização dos dados apartir do clique duplo
-    @FXML
+	@FXML
 	public void onTableViewDoubleClick() {
 
 		tableViewDepartment.setOnMouseClicked(new EventHandler<MouseEvent>()
 		{
-		    @Override
-		    public void handle(MouseEvent event)
-		    {
-		        if(event.getClickCount()>1)
-		        {
-		            System.out.println("double clicked!");
-		        }
-		    }
+			@Override
+			public void handle(MouseEvent event)
+			{
+				if(event.getClickCount()>1)
+				{
+					System.out.println("double click");
+				}
+			}
 		});		
 	}
-    
-    
-    
-    
-    // método criado para chamar tela do tipo Dialog que será apresentado por cima da tela pai.
-    //Parametro absolute Name informa qual FXML será aberto
-    //Parametro parentStage retorna o Stage da tela principal para que o dialog seja aberto por cima.
-     
-    private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
-    	
-    	try {
-    		
-    		// como para carregar aview DepartmentForm.fxml
-    		FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+
+
+
+
+	// método criado para chamar tela do tipo Dialog que será apresentado por cima da tela pai.
+	//Parametro absolute Name informa qual FXML será aberto
+	//Parametro parentStage retorna o Stage da tela principal para que o dialog seja aberto por cima.
+
+	private void createDialogForm(Department obj, String absoluteName, Stage parentStage) {
+
+		try {
+
+			// como para carregar aview DepartmentForm.fxml
+			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 			// Carrega view do tipo Pane ( superclasse da AnchorPane)
-    		Pane pane = loader.load();
-			
-    		//recuperar o controlador do form ( DepartmentFormController )
-    		DepartmentFormController controller  = loader.getController();
-    		//Injeta objeto Department no formulário
-    		controller.setDepartment(obj);
-    		
-    		//Injeta objeto DeparmentSErvice no método setDeparmentService que será utilizado para persistir os dados
-    		controller.setDepartmentService(new DepartmentService());
-    		
-    		//classe está se inscrevendo para receber o evento da classe DeparmentFormController
-    		// toda vez o evento for acionado o metodo onDataChange será executado
-    		controller.subscribeDataChangeListener(this);
-    		
-    		//atualiza os campos os valores do objeto
-    		controller.updateFormData();
-    		
-    		
-    		//instancia novo Stage para carregar a nova View			
+			Pane pane = loader.load();
+
+			//recuperar o controlador do form ( DepartmentFormController )
+			DepartmentFormController controller  = loader.getController();
+			//Injeta objeto Department no formulário
+			controller.setDepartment(obj);
+
+			//Injeta objeto DeparmentSErvice no método setDeparmentService que será utilizado para persistir os dados
+			controller.setDepartmentService(new DepartmentService());
+
+			//classe está se inscrevendo para receber o evento da classe DeparmentFormController
+			// toda vez o evento for acionado o metodo onDataChange será executado
+			controller.subscribeDataChangeListener(this);
+
+			//atualiza os campos os valores do objeto
+			controller.updateFormData();
+
+
+			//instancia novo Stage para carregar a nova View			
 			Stage dialogStage = new Stage();
-			
+
 			dialogStage.setTitle("Enter Department Data");
-			
+
 			// Cria nova Cena para carregar Pane e inclui nova cena no novo Stage
 			// Pane
 			//	+ Scene
 			//		+ Stage
 			dialogStage.setScene(new  Scene(pane));
-			
-			
+
+
 			//desabilita opção de redimencionamento da tela
 			dialogStage.setResizable(false);
-			
+
 			//informa qual é a stage parent
 			dialogStage.initOwner(parentStage);
-			
+
 			// proibe que usuário cliente na stage principal enquanto dialog estiver aberta
 			dialogStage.initModality(Modality.WINDOW_MODAL);
-			
+
 			// Shows this stage and waits for it to be hidden (closed) before returning to the caller.
 			dialogStage.showAndWait(); 
-			
-    	}catch (IOException e) {
-    		Alerts.showAlert("IO Exception", "Error Loading View", e.getMessage(), AlertType.ERROR);
+
+		}catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error Loading View", e.getMessage(), AlertType.ERROR);
 			// TODO: handle exception
 		}
-    	
-    }
+
+	}
 
 	@Override
 	public void onDataChange() {
 		//toda vez que o evento for acionado ( listener DataChangeListener )
 		// o metodo onDataChange será executado atualizando a tabela
 		updateTableView();
-		
+
 	}
-	
+
+
+
+	private void initEditButtons() {
+		tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnEDIT.setCellFactory(param -> new TableCell<Department, Department>() {
+			private final Button button = new Button("edit");
+			@Override
+			protected void updateItem(Department obj, boolean empty) {
+				super.updateItem(obj, empty);
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+				setGraphic(button);
+				button.setOnAction(
+						event -> createDialogForm(
+								obj, "/gui/DepartmentForm.fxml",Utils.currentStage(event)));
+			}
+		});
+	}
+
 }

@@ -140,7 +140,7 @@ public class DepartmentFormController implements Initializable {
 	// Cria um objeto Deparment com os dados informados pelo usuário
 	private Department getFormData() {
 
-		
+		//Cria objeto ValidationException lançando mensagem genérica para classe superior RunTimeException
 		ValidationException exception = new ValidationException("Validation error");		
 		
 		Department obj = new Department();
@@ -148,14 +148,10 @@ public class DepartmentFormController implements Initializable {
 		
 		
 		/*
+		 * Comandos abaixo irão validar se campo Name do form Department está vazio
+		 * Caso esteja vazio o método addError irá adicionar a chave com o nome do campo e a descrição do erro
 		 * 
-		 * 
-		 * 
-		 * COLOCAR MENSAGEM SOBRE EXCEPTION
-		 * 
-		 * 
-		 * 
-		 * 
+		 * Em seguida se a Lista Map dot ipo Exception possui registro para poder lançar a exceção parao  método que fez a chamda do getFormData ( onButtonSaveActiion)
 		 * 
 		 */
 		if ( txtName.getText() == null || txtName.getText().trim().equals("")) {
@@ -181,11 +177,8 @@ public class DepartmentFormController implements Initializable {
 	
 	
 	/*
-	 * 
-	 * 
-	 * INSERIR MENSGEM SOBRE SET ERRORS
-	 * 
-	 * 
+	 * Método lança a exceção na label labelErrorName
+	 * comando Set irá armazenar as chaves da lista Map	 
 	 */
 	private void setErrorMessages(Map<String , String> errors) {
 		

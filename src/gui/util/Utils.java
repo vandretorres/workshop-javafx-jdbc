@@ -11,7 +11,7 @@ public class Utils {
 	
 	public static Stage currentStage(ActionEvent event ) {
 		
-		// retorna Stage do Stage atual
+		// retorna Stage atual
 		return (Stage) ((Node) event.getSource()).getScene().getWindow();
 		
 	}
