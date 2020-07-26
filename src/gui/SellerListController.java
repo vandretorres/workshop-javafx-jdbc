@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.IllegalSelectorException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Seller;
+import model.services.DepartmentService;
 import model.services.SellerService;
 
 public class SellerListController implements Initializable , DataChangeListener {
@@ -173,7 +175,12 @@ public class SellerListController implements Initializable , DataChangeListener 
 			controller.setSeller(obj);
 
 			//Injeta objeto DeparmentSErvice no método setDeparmentService que será utilizado para persistir os dados
-			controller.setSellerService(new SellerService());
+			controller.setServices(new SellerService(),new DepartmentService());
+			
+			
+			// Injeta dados da tabela Departamento na combobox do form SellerForm
+			controller.loadAssociatedObjectes();
+			
 
 			//classe está se inscrevendo para receber o evento da classe DeparmentFormController
 			// toda vez o evento for acionado o metodo onDataChange será executado
@@ -208,6 +215,7 @@ public class SellerListController implements Initializable , DataChangeListener 
 			dialogStage.showAndWait(); 
 
 		}catch (IOException e) {
+			e.printStackTrace();
 			Alerts.showAlert("IO Exception", "Error Loading View", e.getMessage(), AlertType.ERROR);
 			// TODO: handle exception
 		}
