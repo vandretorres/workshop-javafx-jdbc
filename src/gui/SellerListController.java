@@ -2,6 +2,7 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -48,7 +49,18 @@ public class SellerListController implements Initializable , DataChangeListener 
 
 	@FXML
 	private TableColumn<Seller, String> tableColumnName;
-
+	
+	
+	@FXML
+	private TableColumn<Seller, String> tableColumnEmail;
+	
+	@FXML
+	private TableColumn<Seller, Date> tableColumnBirthdate;
+	
+	@FXML
+	private TableColumn<Seller, Double> tableColumnBaseSalary;
+	
+	
 	@FXML 
 	private TableColumn<Seller, Seller> tableColumnEDIT; 
 
@@ -88,6 +100,14 @@ public class SellerListController implements Initializable , DataChangeListener 
 		// metodo setCellValueFactory liga as colunas  com os atributos da classe Seller
 		tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
 		tableColumnName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		
+		tableColumnEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+		tableColumnBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+		// Formata coluna FXML para tipo data
+		Utils.formatTableColumnDate(tableColumnBirthdate, "dd/MM/yyyy");
+		tableColumnBaseSalary.setCellValueFactory(new PropertyValueFactory<>("baseSalary"));
+		// Formata coluna FXML para tipo Double		
+		Utils.formatTableColumnDouble(tableColumnBaseSalary, 2);
 
 		// comandos abaixo fazem com que a tabela seja dimensionada com o tamanho a stage principal
 		Stage stage = (Stage) Main.getMainScene().getWindow();
